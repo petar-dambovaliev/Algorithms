@@ -1,9 +1,11 @@
 package knapsack
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestPick(t *testing.T) {
-	makeNapsack := func(ints ...int) (k Knapsack) {
+	makeNapsack := func(ints ...int) (k Items) {
 		for i := 0; i < len(ints)-1; i += 2 {
 			k.AddFromInt(ints[i], ints[i+1])
 		}
@@ -16,7 +18,7 @@ func TestPick(t *testing.T) {
 	input1 := makeNapsack(1, 3, 4, 3, 8, 5, 5, 6)
 	output1 := makeNapsack(8, 5, 4, 3)
 
-	tests := map[int][2]Knapsack{
+	tests := map[int][2]Items{
 		7: {
 			input, output,
 		},
@@ -25,7 +27,7 @@ func TestPick(t *testing.T) {
 		},
 	}
 
-	weights := []int{10, 12}
+	values := []int{10, 12}
 	lenths := []int{3, 2}
 	var i int
 
@@ -33,14 +35,14 @@ func TestPick(t *testing.T) {
 		in := v
 		chosen := Pick(in[0], icap)
 
-		if chosen.weight != weights[i] {
-			t.Errorf("weigth=%v should be %v", chosen.weight, weights[i])
+		if chosen.Value() != values[i] {
+			t.Errorf("value=%v should be %v", chosen.weight, values[i])
 		}
-		if chosen.Len() != lenths[i] {
-			t.Fatalf("chosen items lenth=%v but should be %v", chosen.Len(), lenths[i])
+		if chosen.items.Len() != lenths[i] {
+			t.Fatalf("chosen items lenth=%v but should be %v", chosen.items.Len(), lenths[i])
 		}
 
-		for k, vv := range chosen.items {
+		for k, vv := range chosen.items.items {
 			if vv.Value() != in[1].items[k].Value() {
 				t.Errorf("Index:%v value=%v should be %v", k, vv.Value(), in[1].items[k].Value())
 			}

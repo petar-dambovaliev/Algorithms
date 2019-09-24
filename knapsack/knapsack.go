@@ -8,7 +8,7 @@ import (
 // Pick picks the best combo from items
 // to fill the given knapsack cap as much as possible
 // returns weight of picked items and a collection of the individual items
-func Pick(items Knapsack, icap int) (chosen Knapsack) {
+func Pick(items Items, icap int) (chosen Knapsack) {
 	icap += 1
 	grid := matrix(len(items.items)+1, icap)
 
@@ -46,10 +46,24 @@ func Pick(items Knapsack, icap int) (chosen Knapsack) {
 		}
 	}
 
-	chosen.weight = grid[len(grid)-1][icap-1]
-
 	return chosen
 }
+
+type Knapsack struct {
+	items  Items
+	weight int
+	value  int
+}
+
+func (i *Knapsack) Add(it Item) {
+	i.items.Add(it)
+	i.weight += it.Weight()
+	i.value += it.Value()
+}
+
+func (i *Knapsack) Weight() int   { return i.weight }
+func (i *Knapsack) Value() int    { return i.value }
+func (i Knapsack) String() string { return i.items.String() }
 
 // Item is a single entity in a knapsack
 type Item interface {
@@ -57,19 +71,17 @@ type Item interface {
 	Weight() int
 }
 
-// Knapsack is a collection of Item interface
+// Items is a collection of Item interface
 // to be filled into a knapsack
-type Knapsack struct {
-	items  []Item
-	weight int
+type Items struct {
+	items []Item
 }
 
-func (i *Knapsack) Weight() int                  { return i.weight }
-func (i *Knapsack) Len() int                     { return len(i.items) }
-func (i *Knapsack) Add(it Item)                  { i.items = append(i.items, it) }
-func (i *Knapsack) AddFromInt(value, weight int) { i.Add(&item{value: value, weight: weight}) }
+func (i *Items) Len() int                     { return len(i.items) }
+func (i *Items) Add(it Item)                  { i.items = append(i.items, it) }
+func (i *Items) AddFromInt(value, weight int) { i.Add(&item{value: value, weight: weight}) }
 
-func (i Knapsack) String() string {
+func (i Items) String() string {
 	var s strings.Builder
 	for k, it := range i.items {
 		s.WriteString(

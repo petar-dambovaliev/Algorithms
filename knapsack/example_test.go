@@ -8,21 +8,21 @@ func (i mockItem) Value() int  { return int(i) }
 func (i mockItem) Weight() int { return int(i) }
 
 func ExampleItems_Add() {
-	var i Knapsack
+	var i Items
 	i.Add(mockItem(1))
 	fmt.Println(i)
 	// Output: 0 => value(1) weight(1)
 }
 
 func ExampleItems_AddFromInt() {
-	var i Knapsack
+	var i Items
 	i.AddFromInt(1, 3)
 	fmt.Println(i)
 	// Output: 0 => value(1) weight(3)
 }
 
 func ExamplePick() {
-	var items Knapsack
+	var items Items
 
 	items.AddFromInt(2, 3)
 	items.AddFromInt(2, 1)
